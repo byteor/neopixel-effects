@@ -1,53 +1,10 @@
 #include "Fire.h"
 
-// HOT COAL FIRE effect
-// using ws2812 LEDs
-// The initial idea and code structure is based on Fire2012
-// https://github.com/krzychb/EspFire2012
 
-#define FRAMES_PER_SECOND 30
-
-#define NUM_LEDS 300 // 60
-CRGB leds[NUM_LEDS];
-
-// Some strips have Blue and Green messed up
-#define SWAP_BLUE_AND_GREEN false
-
-// make sure to set this to the correct pin, ignored for Esp8266
-#define LED_PIN 3
-
-// NOTE: These will ignore the LED_PIN and use GPI03 pin
-NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> strip(NUM_LEDS, LED_PIN);
-
-// SPARKING: What chance (out of 255) is there that a new spark will be lit?
-// Higher chance = more roaring fire.  Lower chance = more calm fire.
-#define SPARKLING 40
-
-// NUM_FLAMES: The number of "Flames". 
-// A Flame is a group of LEDs that heats up and cools down together.
-// A Flame has a center LED that takes all the heat value, 
-// and other LEDs take heat in proportion of I/WIDTH, where I is LED's position from the center of the Flame
-#define NUM_FLAMES 60
-#define MIN_FLAME_WIDTH 4
-#define MAX_FLAME_WIDTH 10
-
-// The length of an "animation". Pre-calculated sin() values are used to calculate the current temperature
-// The total length of animation can be calculated as ANIMATION_LENGTH/FRAMES_PER_SECOND
-#define ANIMATION_LENGTH 128
-
-// A heat value a LED can cool down to
-#define MIN_HEAT_VALUE 1
-// A heat value a LED can heat up to
-#define MAX_HEAT_VALUE 255
-// A heat value a LED has when not involved in any Flame
-#define DEFAULT_HEAT_VALUE (MIN_HEAT_VALUE + (MAX_HEAT_VALUE - MIN_HEAT_VALUE) / 2)
-
-Flame flames[NUM_FLAMES];
-byte heat[NUM_LEDS];
-float animation[ANIMATION_LENGTH];
-
-void setupFire(void)
+void Fire::setup(void)
 {
+  Serial.println("Fire2022: Hot Coal");
+
   float step = 2 * PI / ANIMATION_LENGTH;
   for (int i = 0; i < ANIMATION_LENGTH; i++)
   {
@@ -58,14 +15,12 @@ void setupFire(void)
     flames[i].progress = 0;
   }
 
-  // this resets all the neopixels to an off state
-  strip.Begin();
-  strip.Show();
+  Effect::setup();
 
   Serial.println("Hot Coal started");
 }
 
-void newFlame(void)
+void Fire::newFlame(void)
 {
   byte width = random8(MIN_FLAME_WIDTH, MAX_FLAME_WIDTH);
   for (int i = 0; i < NUM_FLAMES; i++)
@@ -109,7 +64,7 @@ void newFlame(void)
   }
 }
 
-void setHeatValue(int y, int value)
+void Fire::setHeatValue(int y, int value)
 {
   if (y >= 0 && y < NUM_LEDS)
   {
@@ -117,7 +72,7 @@ void setHeatValue(int y, int value)
   }
 }
 
-void processFlames(void)
+void Fire::processFlames(void)
 {
   for (int i = 0; i < NUM_FLAMES; i++)
   {
@@ -138,7 +93,7 @@ void processFlames(void)
   }
 }
 
-void Fire2022(void)
+void Fire::keepAlive(void) 
 {
   // Step 1. Set all LEDs to default heat value
   for (int i = 0; i < NUM_LEDS; i++)
@@ -158,29 +113,7 @@ void Fire2022(void)
   {
     CRGB color = HeatColor(heat[j]);
     //color.setRGB(heat[j], heat[j], heat[j]);
-    if (SWAP_BLUE_AND_GREEN)
-    {
-      color.setRGB(color.r, color.b, color.g);
-    }
     leds[j] = color;
   }
 }
 
-long fireTimer;
-
-void keepFireAlive(void)
-{
-  if (millis() > fireTimer + 1000 / FRAMES_PER_SECOND)
-  {
-    fireTimer = millis();
-    Fire2022();
-    RgbColor pixel;
-    for (int i = 0; i < NUM_LEDS; i++)
-    {
-      pixel = RgbColor(leds[i].r, leds[i].g, leds[i].b);
-      pixel = RgbColor::LinearBlend(pixel, RgbColor(0, 0, 0), (255 - heat[i]) / 255.0);
-      strip.SetPixelColor(i, pixel);
-    }
-    strip.Show();
-  }
-}

@@ -1,14 +1,24 @@
 #include "Fire.h"
+#include "Spark.h"
+
+
+NeoPixel_t strip(NUM_LEDS, LED_PIN);
+
+Fire fire(&strip);
+Spark spark(&strip);
+Effect *effect;
 
 void setup()
 {
   Serial.begin(115200);
   Serial.println();
-  Serial.println("Fire2022: Hot Coal");
-  setupFire();
+
+  effect = &spark;
+  
+  effect->setup();
 }
 
 void loop()
 {
-  keepFireAlive();
+  effect->loop();
 }
