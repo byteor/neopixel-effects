@@ -7,7 +7,7 @@ typedef NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> NeoPixel_t;
 
 #define FRAMES_PER_SECOND 30
 
-#define NUM_LEDS 60 //300 // 60
+#define NUM_LEDS 300 // 60
 
 // Some strips have Blue and Green messed up
 #define SWAP_BLUE_AND_GREEN false
@@ -24,7 +24,7 @@ protected:
     long timer;
     CRGB leds[NUM_LEDS];
     NeoPixel_t *strip;
-
+    virtual void init(void) {};
 public:
     Effect(NeoPixel_t *st) 
     {

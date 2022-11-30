@@ -4,6 +4,8 @@
 void Effect::setup(void)
 {
   // this resets all the neopixels to an off state
+  Serial.printf("LEDs: %d, FPS: %d\n", NUM_LEDS, FRAMES_PER_SECOND);
+  init();
   strip->Begin();
   strip->Show();
 }

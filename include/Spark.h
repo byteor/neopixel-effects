@@ -27,9 +27,8 @@ protected:
   void newSpark(void);
   //void Fire2022(void);
   void processSparks(void);
-
+  void init(void);
 public:
   Spark(NeoPixel_t *st) : Effect(st) {};
-  void setup(void);
   void keepAlive(void);
 };

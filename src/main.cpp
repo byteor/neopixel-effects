@@ -4,16 +4,16 @@
 
 NeoPixel_t strip(NUM_LEDS, LED_PIN);
 
-Fire fire(&strip);
-Spark spark(&strip);
+//Fire fire(&strip);
+//Spark spark(&strip);
 Effect *effect;
 
 void setup()
 {
   Serial.begin(115200);
-  Serial.println();
+  Serial.println("Starting...");
 
-  effect = &spark;
+  effect = new Fire(&strip);
   
   effect->setup();
 }

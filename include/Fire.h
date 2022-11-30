@@ -24,9 +24,9 @@
 #define ANIMATION_LENGTH 128
 
 // A heat value a LED can cool down to
-#define MIN_HEAT_VALUE 1
+#define MIN_HEAT_VALUE 20
 // A heat value a LED can heat up to
-#define MAX_HEAT_VALUE 255
+#define MAX_HEAT_VALUE 150
 // A heat value a LED has when not involved in any Flame
 #define DEFAULT_HEAT_VALUE (MIN_HEAT_VALUE + (MAX_HEAT_VALUE - MIN_HEAT_VALUE) / 2)
 
@@ -50,9 +50,8 @@ protected:
   void newFlame(void);
   void Fire2022(void);
   void processFlames(void);
-
+  void init(void);
 public:
   Fire(NeoPixel_t *st) : Effect(st) {};
-  void setup(void);
   void keepAlive(void);
 };

@@ -1,9 +1,8 @@
 #include "Spark.h"
 
-void Spark::setup(void)
+void Spark::init(void)
 {
     Serial.println("Sparks...");
-    Effect::setup();
 }
 
 void Spark::processSparks()

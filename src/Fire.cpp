@@ -1,9 +1,11 @@
 #include "Fire.h"
 
 
-void Fire::setup(void)
+void Fire::init(void)
 {
   Serial.println("Fire2022: Hot Coal");
+  Serial.printf("%d flames [%d, %d] width; Heat from %d to %d; Animation: %d\n", 
+    NUM_FLAMES, MIN_FLAME_WIDTH, MAX_FLAME_WIDTH, MIN_HEAT_VALUE, MAX_HEAT_VALUE, ANIMATION_LENGTH);
 
   float step = 2 * PI / ANIMATION_LENGTH;
   for (int i = 0; i < ANIMATION_LENGTH; i++)
@@ -14,9 +16,6 @@ void Fire::setup(void)
   {
     flames[i].progress = 0;
   }
-
-  Effect::setup();
-
   Serial.println("Hot Coal started");
 }
 
@@ -27,6 +26,7 @@ void Fire::newFlame(void)
   {
     if (flames[i].progress == 0)
     {
+      //Serial.print("*");
       // animation direction - from hot to cold or vice versa
       int sgn = random8(0, 255) > 127 ? 1 : -1;
 
@@ -79,7 +79,7 @@ void Fire::processFlames(void)
     if (flames[i].progress > 0)
     {
       int newHeat = (float)flames[i].heat * animation[flames[i].progress];
-      // Serial.printf("%d -> %d + %d\r\n", flames[i].y, heat[flames[i].y], newHeat);
+      //Serial.printf("%d - %d * %f -> %d + %d\r\n", flames[i].y, flames[i].heat, animation[flames[i].progress], heat[flames[i].y], newHeat);
       for (int j = 0; j < flames[i].width; j++)
       {
         int newValue = newHeat - j * newHeat / flames[i].width;
