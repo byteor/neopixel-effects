@@ -9,10 +9,10 @@
 #define NUM_SPARKS 30
 
 #define BRIGHTNESS 255
-#define MIN_BRIGHTNESS 20
+#define MIN_BRIGHTNESS 2
 
 // The length of an "animation"
-// The total length of animation can be calculated as ANIMATION_LENGTH/FRAMES_PER_SECOND
+// The total length of animation can be calculated as ANIMATION_LENGTH/FRAMES_PER_UNIT
 #define ANIMATION_LENGTH 4
 
 class Spark : public Effect
@@ -20,7 +20,7 @@ class Spark : public Effect
 protected:
   byte sparks[NUM_SPARKS];
   byte progress[NUM_SPARKS];
-  byte heat[NUM_LEDS];
+  //byte heat[NUM_LEDS];
   //float animation[ANIMATION_LENGTH];
 
   //void setHeatValue(int y, int value);
@@ -29,6 +29,6 @@ protected:
   void processSparks(void);
   void init(void);
 public:
-  Spark(NeoPixel_t *st) : Effect(st) {};
+  Spark(int numPixels, EOrder colorOrder) : Effect(numPixels, colorOrder) {};
   void keepAlive(void);
 };

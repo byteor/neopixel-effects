@@ -36,7 +36,7 @@ void Fire::newFlame(void)
       // Flames have certain widths and new flame should not intersect with ones in progress
       for (int j = 0; j < 5; j++)
       {
-        int y = random16(NUM_LEDS);
+        int y = random16(numLeds);
         bool intersect = false;
         int thisStart = y - flames[i].width;
         int thisEnd = y + flames[i].width;
@@ -66,7 +66,7 @@ void Fire::newFlame(void)
 
 void Fire::setHeatValue(int y, int value)
 {
-  if (y >= 0 && y < NUM_LEDS)
+  if (y >= 0 && y < numLeds)
   {
     heat[y] = DEFAULT_HEAT_VALUE + value;
   }
@@ -96,7 +96,7 @@ void Fire::processFlames(void)
 void Fire::keepAlive(void) 
 {
   // Step 1. Set all LEDs to default heat value
-  for (int i = 0; i < NUM_LEDS; i++)
+  for (int i = 0; i < numLeds; i++)
   {
     heat[i] = DEFAULT_HEAT_VALUE;
   }
@@ -109,11 +109,10 @@ void Fire::keepAlive(void)
     newFlame();
   }
   // Step 4.  Map from heat cells to LED colors
-  for (int j = 0; j < NUM_LEDS; j++)
+  for (int j = 0; j < numLeds; j++)
   {
     CRGB color = HeatColor(heat[j]);
-    //color.setRGB(heat[j], heat[j], heat[j]);
-    leds[j] = color;
+    leds[j] = RgbColor(color.r, color.g, color.b);
   }
 }
 

@@ -12,7 +12,7 @@ void Spark::processSparks()
         if (progress[i] > 0)
         {
             progress[i]--;
-            heat[sparks[i]] = (byte) (MIN_BRIGHTNESS + progress[i] * (BRIGHTNESS - MIN_BRIGHTNESS) / ANIMATION_LENGTH);
+            leds[sparks[i]] = RgbColor((byte) (MIN_BRIGHTNESS + progress[i] * (BRIGHTNESS - MIN_BRIGHTNESS) / ANIMATION_LENGTH));
             if(progress[i] <= 0) progress[i] = 0;
         }
     }
@@ -20,7 +20,7 @@ void Spark::processSparks()
 
 void Spark::newSpark()
 {
-    int y = random16(NUM_LEDS);
+    int y = random16(numLeds);
     for (int i = 0; i < NUM_SPARKS; i++)
     {
         if (progress[i] == 0)
@@ -34,9 +34,9 @@ void Spark::newSpark()
 
 void Spark::keepAlive(void)
 {
-    for (int i = 0; i < NUM_LEDS; i++)
+    for (int i = 0; i < numLeds; i++)
     {
-        heat[i] = MIN_BRIGHTNESS;
+        leds[i] = RgbColor(MIN_BRIGHTNESS);
     }
     // Step 2. Process
     processSparks();
@@ -45,12 +45,5 @@ void Spark::keepAlive(void)
     if (random8() < SPARKLING)
     {
         newSpark();
-    }
-    // Step 4.  Map from heat cells to LED colors
-    for (int j = 0; j < NUM_LEDS; j++)
-    {
-        CRGB color = HeatColor(heat[j]);
-        color.setRGB(heat[j], heat[j], heat[j]);
-        leds[j] = color;
     }
 }

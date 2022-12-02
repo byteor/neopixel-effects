@@ -20,7 +20,7 @@
 #define MAX_FLAME_WIDTH 10
 
 // The length of an "animation". Pre-calculated sin() values are used to calculate the current temperature
-// The total length of animation can be calculated as ANIMATION_LENGTH/FRAMES_PER_SECOND
+// The total length of animation can be calculated as ANIMATION_LENGTH/FRAMES_PER_UNIT
 #define ANIMATION_LENGTH 128
 
 // A heat value a LED can cool down to
@@ -43,7 +43,7 @@ class Fire : public Effect
 {
 protected:
   Flame flames[NUM_FLAMES];
-  byte heat[NUM_LEDS];
+  byte heat[MAX_NUM_LEDS];
   float animation[ANIMATION_LENGTH];
 
   void setHeatValue(int y, int value);
@@ -52,6 +52,6 @@ protected:
   void processFlames(void);
   void init(void);
 public:
-  Fire(NeoPixel_t *st) : Effect(st) {};
+  Fire(int numPixels, EOrder colorOrder) : Effect(numPixels, colorOrder){};
   void keepAlive(void);
 };
